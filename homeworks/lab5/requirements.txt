@@ -1,0 +1,31 @@
+# PyTorch — для CPU. Если есть NVIDIA GPU, после этого ставь отдельно через
+# pip install torch --index-url https://download.pytorch.org/whl/cu121
+torch>=2.0,<3.0
+
+# Gymnasium 0.29.x — там FrameStack и frame_stack.LazyFrames на местах,
+# в 1.0+ их переименовали и ноутбук сломается. Без [atari] extra,
+# чтобы избежать тяжёлого shimmy и его старых версий ale-py.
+gymnasium>=0.29,<1.0
+
+# ale-py 0.9.x — последняя ветка, гарантированно совместимая с gymnasium 0.29.
+# ale-py 0.10/0.11+ начинают тянуть API из gymnasium 1.0 (AutoresetMode и т.д.),
+# что сломает наш ноутбук (FrameStack/LazyFrames переименованы в 1.0).
+# 0.9.1 имеет wheel под Python 3.12 на Windows (cp312-cp312-win_amd64).
+ale-py>=0.9,<0.10
+
+# AutoROM — CLI-утилита для скачивания Atari ROM-файлов с автопринятием лицензии.
+# Extra [accept-rom-license] активирует автоматическое согласие.
+autorom[accept-rom-license]>=0.6.1
+
+# AtariPreprocessing wrapper (resize 84×84 + grayscale) использует cv2
+opencv-python
+
+# pygame нужен для render() в CartPole (debug-ноутбук) и других classic_control envs
+pygame
+
+# Стандартные ML/DL утилиты
+numpy
+matplotlib
+tqdm
+tensorboard
+psutil
