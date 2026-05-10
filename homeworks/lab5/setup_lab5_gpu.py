@@ -162,9 +162,36 @@ else:
 # -----------------------------------------------------------------------------
 # Запуск
 # -----------------------------------------------------------------------------
+def warn_if_not_venv() -> None:
+    """Предупреждаем, если запускаем в глобальный Python — это плохая практика."""
+    in_venv = (
+        hasattr(sys, "real_prefix")
+        or (hasattr(sys, "base_prefix") and sys.base_prefix != sys.prefix)
+    )
+    if not in_venv:
+        print("=" * 60)
+        print("⚠️  ВНИМАНИЕ: ты НЕ в virtual environment!")
+        print(f"Текущий Python: {sys.executable}")
+        print()
+        print("Рекомендуется создать venv ПЕРЕД запуском этого скрипта:")
+        print("  py -3.12 -m venv .venv")
+        print("  .venv\\Scripts\\activate")
+        print("  python setup_lab5_gpu.py")
+        print()
+        print("Иначе все пакеты поставятся в глобальный Python.")
+        print("=" * 60)
+        ans = input("Продолжить без venv? [y/N]: ").strip().lower()
+        if ans not in ("y", "yes", "д", "да"):
+            print("Прерывание. Создай venv и запусти заново.")
+            sys.exit(0)
+
+
 def main() -> None:
     print(f"Рабочая папка: {ROOT}")
     print(f"Python: {sys.version.split()[0]}")
+    print(f"Executable: {sys.executable}")
+
+    warn_if_not_venv()
 
     step("1. Снос старого torch", uninstall_torch)
     step("2. Установка torch с CUDA 12.8 (cu128)", install_torch_cuda)
